@@ -1,23 +1,6 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a name="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
-
 
 <!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 [![GitHub Repo stars][stars-shield]][stars-url]
 [![MIT License][license-shield]][license-url]
 
@@ -37,7 +20,7 @@
     <a href="https://github.com/duja446/BluetoothAmp"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/githu_username/BluetoothAmp">View Demo</a>
+    <a href="https://github.com/duja446/BluetoothAmp">View Demo</a>
     ·
     <a href="https://github.com/duja446/BluetoothAmp/issues">Report Bug</a>
     ·
@@ -81,7 +64,9 @@
 [![Bluetooth Amp Screen Shot][product-screenshot]](https://example.com)
 
 I wanted to create an app with which I can play music on my bluetooth speakers from my phone but withouth it coming from my phone. I created an webapp which lists albums and songs, and can play music from the device that is hosting the app. That device can connect to any bluetooth speaker thus being able to play music on it. I personally host it on a RaspberryPI and connect the PI to my bluetooth speakers.
+
 The app has a really similar style to [Poweramp](https://powerampapp.com/) a music player I use on a daily basis.
+
 The project currently only supports music in the `.flac` format.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -144,6 +129,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
+- [ ] Write the usage page
 - [ ] Support .mp3 files
 - [ ] Music seek
 - [ ] Bluetooth connection from the app
