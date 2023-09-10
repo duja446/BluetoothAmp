@@ -15,7 +15,7 @@
 <h3 align="center">Bluetooth Amp</h3>
 
   <p align="center">
-    Simple application that stores uploaded images and serves them.
+    A webapp which plays music on the device hosting it, which can route it to AUX, Bluetooth or another device.
     <br />
     <a href="https://github.com/duja446/BluetoothAmp"><strong>Explore the docs »</strong></a>
     <br />
