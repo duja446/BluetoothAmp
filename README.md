@@ -25,7 +25,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
+  <a href="https://github.com/duja446/BluetoothAmp">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -34,14 +34,14 @@
   <p align="center">
     A self hosted webapp that plays music through bluetooth.
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/duja446/BluetoothAmp"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    <a href="https://github.com/githu_username/BluetoothAmp">View Demo</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
+    <a href="https://github.com/duja446/BluetoothAmp/issues">Report Bug</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
+    <a href="https://github.com/duja446/BluetoothAmp/issues">Request Feature</a>
   </p>
 </div>
 
@@ -152,7 +152,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [ ] List songs by:
     - [ ] Author
     - [ ] Genre
-- [ ] Raing system
+- [ ] Raiting system
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -197,7 +197,7 @@ Project Link: [https://github.com/duja446/BluetoothAmp](https://github.com/duja4
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [stars-shield]: https://img.shields.io/github/stars/duja446/BluetoothAmp.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/duja446/stargazers
+[stars-url]: https://github.com/duja446/duja446/stargazers
 [license-shield]: https://img.shields.io/github/license/duja446/BluetoothAmp.svg?style=for-the-badge
 [license-url]: https://github.com/duja446/BluetoothAmp/blob/master/LICENSE.txt
 [product-screenshot]: images/screenshot.png
