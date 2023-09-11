@@ -8,7 +8,7 @@ defmodule BluetoothAmpWeb.Music.AlbumListLive do
   def album_card(%{id: _, name: _, cover: _} = assigns) do
 ~H"""
     <a href={"/albums/#{@id}"}>
-      <img src={BluetoothAmpWeb.B3.get_url(@cover)} class="rounded-xl"/>
+      <img src={BluetoothAmpWeb.B3.get_url(@cover)} class="rounded-xl h-full w-full"/>
       <p class="font-bold"><%= cut_text(@name) %></p>
     </a>
     """

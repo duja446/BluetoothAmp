@@ -19,7 +19,6 @@ defmodule BluetoothAmpWeb.Router do
 
     live "/albums", Music.AlbumListLive
     live "/albums/:id", Music.AlbumLive
-    live "/scan", Music.Scan
   end
 
   # Other scopes may use custom stacks.

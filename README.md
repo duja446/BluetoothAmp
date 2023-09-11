@@ -129,6 +129,8 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
+- [x] Scan button 
+- [ ] Base page
 - [ ] Write the usage page
 - [ ] Support .mp3 files
 - [ ] Music seek

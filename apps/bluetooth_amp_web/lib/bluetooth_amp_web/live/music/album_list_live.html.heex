@@ -1,4 +1,4 @@
-<div class="grid grid-cols-2 gap-y-4 gap-x-4 p-4 ">
+<div class="grid grid-cols-2 gap-y-8 gap-x-6 p-4 ">
   <%= for album <- BluetoothAmp.Music.list_albums() do %>
     <.album_card id={album.id} name={album.name} cover={album.cover}/>
   <% end %>
