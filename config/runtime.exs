@@ -33,8 +33,7 @@ if config_env() == :prod do
         """
 
   config :bluetooth_amp_web, 
-    file_server: file_server,
-    youtube_api_key: youtube_api_key
+    file_server: file_server
 
   database_path =
     System.get_env("DATABASE_PATH") ||

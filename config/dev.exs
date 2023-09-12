@@ -5,7 +5,7 @@ config :player,
   mpd_port: 6600
 
 config :bluetooth_amp_web, 
-  file_server: "localhost:4001",
+  file_server: "localhost:4001"
 
 
 # Configure your database
