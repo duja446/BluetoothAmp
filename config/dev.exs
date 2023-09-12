@@ -6,7 +6,6 @@ config :player,
 
 config :bluetooth_amp_web, 
   file_server: "localhost:4001",
-  youtube_api_key: "AIzaSyAQAGDWSAf8zchKu393joXjg4mPY6PmSC8"
 
 
 # Configure your database

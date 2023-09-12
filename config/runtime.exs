@@ -32,12 +32,6 @@ if config_env() == :prod do
         environment variable FILE_SERVER_IP not set
         """
 
-  youtube_api_key = 
-    System.get_env("YOUTUBE_API_KEY") ||
-      raise """
-        environment variable YOUTUBE_API_KEY not set
-        """
-
   config :bluetooth_amp_web, 
     file_server: file_server,
     youtube_api_key: youtube_api_key
