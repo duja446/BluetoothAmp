@@ -98,7 +98,7 @@ defmodule Scanner.Parser.Flac do
     Logger.debug("Vendor string: #{inspect vendor_string}")
     v = Scanner.Parser.VorbisComment.parse(user_comment_list)
     Logger.debug("Comment list: #{inspect v}")
-    {:vorbis_comment, v}
+    {:data, v}
   end
 
   def parse_metadata_block_data(6, <<

@@ -3,7 +3,7 @@ defmodule Scanner do
   def scan(dir) do
     dir
     |> ls_r()
-    |> Enum.map(&Scanner.Parser.Flac.parse/1)
+    |> Enum.map(&parse/1)
     |> Enum.reduce(%{}, &make/2)
     
   end
@@ -11,7 +11,7 @@ defmodule Scanner do
   def format(%{
     file_info: %{path: path},
     stream_info: %{duration: duration}, 
-    vorbis_comment: %{album: album, artist: artist, title: title, tracknumber: track}
+    data: %{album: album, artist: artist, title: title, tracknumber: track}
     }) do
 
     {artist, %{name: album, path: Path.dirname(path)}, %{name: title, track: track, duration: duration, path: path}}
@@ -35,7 +35,14 @@ defmodule Scanner do
   end
 
   def check_extension(file) do
-    String.ends_with?(file, [".flac"])
+    String.ends_with?(file, [".flac", ".mp3"])
+  end
+
+  def parse(file) do
+    cond do 
+      String.ends_with?(file, [".flac"]) -> Scanner.Parser.Flac.parse(file)
+      String.ends_with?(file, [".mp3"]) -> Scanner.Parser.MP3.parse(file)
+    end
   end
 end
 
