@@ -92,19 +92,19 @@ defmodule Scanner.Parser.MP3 do
     cond do
       id == "TALB" -> 
         {strs, rest} = decode_text_frame(frame_size, rest) 
-        {rest, {:album, strs}} 
+        {rest, {:album, Enum.at(strs, 0)}} 
 
       id == "TIT2" ->
         {strs, rest} = decode_text_frame(frame_size, rest) 
-        {rest, {:title, strs}} 
+        {rest, {:title, Enum.at(strs, 0)}} 
 
       id == "TPE1" ->
         {strs, rest} = decode_text_frame(frame_size, rest) 
-        {rest, {:artist, strs}} 
+        {rest, {:artist, Enum.at(strs, 0)}} 
 
       id == "TRCK" ->
         {strs, rest} = decode_text_frame(frame_size, rest) 
-        {rest, {:tracknumber, String.to_integer(strs)}} 
+        {rest, {:tracknumber, get_trck(strs)}} 
 
       id in @valid_tags ->
         << _frame_data :: size(frame_size)-binary, rest :: bitstring >> = rest
@@ -113,6 +113,13 @@ defmodule Scanner.Parser.MP3 do
       true -> 
         {rest, :stop}
     end
+  end
+
+  def get_trck(strs) do
+    Enum.at(strs, 0)
+    |> String.split("/")
+    |> Enum.at(0) 
+    |> String.to_integer()
   end
 
   def decode_text_frame(frame_size, <<text_encoding::size(8), rest::binary>>) do
@@ -209,7 +216,7 @@ defmodule Scanner.Parser.MP3 do
   def parse(file) do
     {:ok, binary} = :file.read_file(file)
     {rest, data} = parse_data(binary)
-    #{rest, duration} = calculate_duration(rest)
-    %{data: data, file_info: %{path: file}, stream_info: %{duration: 0}}
+    duration = Scanner.Parser.MP3Duration.duration(rest)
+    %{data: data, file_info: %{path: file}, stream_info: %{duration: duration * 1000}}
   end
 end
