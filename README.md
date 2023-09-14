@@ -130,7 +130,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 ## Roadmap
 
 - [x] Scan button 
-- [ ] Base page
+- [x] Base page
 - [ ] Write the usage page
 - [x] Support .mp3 files
 - [ ] Music seek

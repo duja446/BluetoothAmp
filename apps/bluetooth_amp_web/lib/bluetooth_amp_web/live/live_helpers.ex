@@ -14,4 +14,13 @@ defmodule BluetoothAmpWeb.LiveHelpers do
     "/covers/#{album_name}.jpg"
   end
 
+  def transition(from, to) do
+    %{
+      id: Ecto.UUID.generate(),
+      "phx-hook": "transition",
+      "data-transition-from": from,
+      "data-transition-to": to
+    }
+  end
+
 end

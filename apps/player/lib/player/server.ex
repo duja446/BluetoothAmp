@@ -8,13 +8,19 @@ defmodule Player.Server do
   end
 
   defp connect() do
-    _ = :gen_tcp.connect(Application.get_env(:player, :mpd_ip), Application.get_env(:player, :mpd_port), [:binary, active: true, keepalive: true])
+    :gen_tcp.connect(Application.get_env(:player, :mpd_ip), Application.get_env(:player, :mpd_port), [:binary, active: true, keepalive: true])
   end
 
   def init({pubsub, channel}) do
-    {:ok, port} = connect()
     PubSub.subscribe(pubsub, channel)
-    {:ok, %{port: port}}
+    case connect() do
+      {:ok, port} -> {:ok, %{port: port}}
+      {:error, _reason} -> {:ok, %{port: :error}}
+    end
+  end
+
+  def handle_info(_, %{port: :error} = state) do
+    {:noreply, state}
   end
 
   def handle_info(%{event: "current_song", payload: song}, %{port: p} = state) do

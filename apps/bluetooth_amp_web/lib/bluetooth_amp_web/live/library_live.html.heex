@@ -1,18 +1,22 @@
-<div class="px-4">
+<div class="px-4
+  transition duration-500 ease-out opacity-0 scale-95" 
+  {transition("opacity-0 scale-95", "opacity-100 scale-100")}>
+
   <h1 class="text-3xl font-bold mb-8">Library</h1>
 
-  <div class="flex flex-col gap-y-5">
-    <.page_card icon_name="music" icon_color="fill-white" bg_color="bg-zinc-400" text="All songs" redirect="/" />
+  <div class="flex flex-col gap-y-6">
+    <.page_card icon_name="music" icon_color="fill-white" bg_color="bg-[#66BAEA]" text="All songs" redirect="/" />
 
-    <.page_card icon_name="compact-disc" icon_color="fill-white" bg_color="bg-zinc-400" text="Albums" redirect="/albums"/>
+    <.page_card icon_name="compact-disc" icon_color="fill-white" bg_color="bg-[#7CACD3]" text="Albums" redirect="/albums"/>
 
-    <.page_card icon_name="microphone" icon_color="fill-white" bg_color="bg-zinc-400" text="Artists" redirect="/"/>
+    <.page_card icon_name="microphone" icon_color="fill-white" bg_color="bg-[#939DBD]" text="Artists" redirect="/"/>
 
-    <.page_card icon_name="list" icon_color="fill-white" bg_color="bg-zinc-400" text="Playlists" redirect="/"/>
+    <.page_card icon_name="list" icon_color="fill-white" bg_color="bg-[#AB8EA5]" text="Playlists" redirect="/"/>
 
-    <.page_card icon_name="thumbs-up" icon_color="fill-white" bg_color="bg-zinc-400" text="Liked songs" redirect="/"/>
+    <.page_card icon_name="thumbs-up" icon_color="fill-white" bg_color="bg-[#C37F8D]" text="Liked songs" redirect="/"/>
 
-    <.scan_button scan_loading={@scan_loading} />
+    <.scan_button scan_loading={@scan_loading} bg_color="bg-[#D87178]"/>
 
+    <.bluetooth_button bg_color="bg-[#EA6666]"/>
   </div>
 </div>

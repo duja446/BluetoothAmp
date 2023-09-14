@@ -17,16 +17,22 @@ defmodule BluetoothAmpWeb.LibraryLive do
     {:noreply, socket |> assign(:scan_loading, false) |> push_redirect(to: "/albums")}
   end
 
-  def button_classes(loading) do
-    spin = if loading, do: "animate-spin", else: ""
-    "h-5 fill-zinc-400 " <> spin
+  def bluetooth_button(%{bg_color: _} = assigns) do
+  ~H"""
+    <div class="flex gap-4 h-9 items-center cursor-pointer">
+      <div class={"rounded-full h-11 w-11 flex justify-center items-center #{@bg_color}"}>
+        <FontAwesome.LiveView.icon name="bluetooth-b" type="brands" class={"w-5 fill-white"}/>
+      </div>
+      <p class="text-xl font-bold">Bluetooth configuration</p>
+    </div>
+    """      
   end
 
-  def scan_button(assigns) do
+  def scan_button(%{bg_color: _} = assigns) do
   ~H"""
-    <div class="flex gap-4 h-9 items-center" phx-click="scan">
-      <div class="rounded-full bg-gray-800 h-9 w-9 flex justify-center items-center " phx-click="scan">
-        <FontAwesome.LiveView.icon name="arrows-rotate" type="solid" class={"w-5 fill-zinc-400 #{if @scan_loading, do: 'animate-spin', else: ''}"}/>
+    <div class="flex gap-4 h-9 items-center cursor-pointer" phx-click="scan">
+      <div class={"rounded-full h-11 w-11 flex justify-center items-center #{@bg_color}"} phx-click="scan">
+        <FontAwesome.LiveView.icon name="arrows-rotate" type="solid" class={"w-6 fill-white #{if @scan_loading, do: 'animate-spin', else: ''}"}/>
       </div>
       <p class="text-xl font-bold">Scan for music</p>
     </div>
@@ -37,8 +43,8 @@ defmodule BluetoothAmpWeb.LibraryLive do
 ~H"""
     <.link navigate={@redirect}>
       <div class="flex gap-4 h-9 items-center">
-        <div class={"rounded-full bg-zinc-400 w-9 h-9 flex items-center justify-center #{@bg_color}"}>
-          <FontAwesome.LiveView.icon name={@icon_name} type="solid" class={"w-5 #{@icon_color}"} />
+        <div class={"rounded-full w-11 h-11 flex items-center justify-center #{@bg_color}"}>
+          <FontAwesome.LiveView.icon name={@icon_name} type="solid" class={"w-6 #{@icon_color}"} />
         </div>
         <p class="text-xl font-bold"><%= @text %></p>
       </div>
