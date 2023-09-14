@@ -217,6 +217,6 @@ defmodule Scanner.Parser.MP3 do
     {:ok, binary} = :file.read_file(file)
     {rest, data} = parse_data(binary)
     duration = Scanner.Parser.MP3Duration.duration(rest)
-    %{data: data, file_info: %{path: file}, stream_info: %{duration: duration * 1000}}
+    %{data: data, file_info: %{path: file}, stream_info: %{duration: floor(duration * 1000)}}
   end
 end

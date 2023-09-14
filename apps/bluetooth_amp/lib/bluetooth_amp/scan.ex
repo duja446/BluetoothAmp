@@ -19,8 +19,10 @@ defmodule BluetoothAmp.Scan do
         {:ok, artist} = Music.create_artist(%{name: artist_name})
         Enum.map(albums_map, 
           fn {%{name: name, path: path}, songs} -> 
+            Logger.debug("sent cover: #{path <> "/Cover.jpg"}")
             cover_path = path <> "/Cover.jpg"
             random_name = random_str(10)
+            Logger.debug("with name: #{random_name}")
 
             FileServer.upload(random_name, cover_path, 50)
 
