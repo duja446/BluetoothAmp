@@ -13,4 +13,5 @@ defmodule BluetoothAmpWeb.LiveHelpers do
   def get_cover(album_name) do
     "/covers/#{album_name}.jpg"
   end
+
 end

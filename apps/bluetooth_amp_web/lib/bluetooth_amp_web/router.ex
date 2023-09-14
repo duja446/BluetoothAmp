@@ -5,7 +5,7 @@ defmodule BluetoothAmpWeb.Router do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, {BluetoothAmpWeb.LayoutView, :root}
+    plug :put_root_layout, {BluetoothAmpWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
@@ -17,6 +17,7 @@ defmodule BluetoothAmpWeb.Router do
   scope "/", BluetoothAmpWeb do
     pipe_through :browser
 
+    live "/", LibraryLive
     live "/albums", Music.AlbumListLive
     live "/albums/:id", Music.AlbumLive
   end

@@ -1,5 +1,5 @@
 <div class="h-[16rem] relative overflow-hidden">
-  <img src={BluetoothAmpWeb.B3.get_url(@album.cover)} class="w-full h-[25rem] blur-sm"/>
+  <img src={FileServer.get_url(@album.cover)} class="w-full h-[25rem] blur-sm"/>
   <div class="grid grid-cols-7 grid-rows-[repeat(8,_minmax(0,_1fr))] h-[16rem] w-full absolute top-0 left-0 gap-x-1 px-3 py-2">
     <div class="z-1 col-span-7 row-start-5 opacity-90 lex items-center">
       <p class="text-lg bg-neutral-900 rounded-xl px-2"><%= cut_text(@album.name) %></p>

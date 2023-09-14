@@ -40,6 +40,8 @@ defmodule BluetoothAmp.MixProject do
       {:ecto_sql, "~> 3.6"},
       {:ecto_sqlite3, ">= 0.0.0"},
       {:jason, "~> 1.2"},
+      {:scanner, in_umbrella: true},
+      {:file_server, in_umbrella: true},
     ]
   end
 

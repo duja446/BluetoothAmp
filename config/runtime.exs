@@ -27,13 +27,13 @@ if config_env() == :prod do
     mpd_port: String.to_integer(mpd_port)
 
   file_server =
-    System.get_env("FILE_SERVER_IP") ||
+    System.get_env("FILE_SERVER_ADDRESS") ||
       raise """
         environment variable FILE_SERVER_IP not set
         """
 
-  config :bluetooth_amp_web, 
-    file_server: file_server
+  config :file_server, 
+    address: file_server
 
   database_path =
     System.get_env("DATABASE_PATH") ||

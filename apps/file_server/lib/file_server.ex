@@ -1,8 +1,8 @@
-defmodule BluetoothAmpWeb.B3 do
+defmodule FileServer do
 
   def upload(name, file_path, quality \\ 100) do
     HTTPoison.post!(
-      "#{Application.get_env(:bluetooth_amp_web, :file_server)}/upload", 
+      "#{Application.get_env(:file_server, :address)}/upload", 
       {:multipart, [
         {"name", name},
         {"quality", Integer.to_string(quality)},
@@ -12,8 +12,6 @@ defmodule BluetoothAmpWeb.B3 do
   end
 
   def get_url(name) do
-    "http://#{Application.get_env(:bluetooth_amp_web, :file_server)}/files/#{name}"
+    "http://#{Application.get_env(:file_server, :address)}/files/#{name}"
   end
-
-  
 end

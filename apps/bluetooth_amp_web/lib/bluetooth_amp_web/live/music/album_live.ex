@@ -24,7 +24,7 @@ defmodule BluetoothAmpWeb.Music.AlbumLive do
   def song_card(%{id: _, title: _, duration: _, track: _, album_name: _, album_cover: _} = assigns) do
 ~H"""
     <div phx-click="play" phx-value-song_id={@id} class="flex m-3 gap-x-[1rem] m-0 p-3 rounded-xl mx-2 hover:bg-neutral-900">
-      <img class="rounded-2xl w-[100px] lg:w-[200px]" src={BluetoothAmpWeb.B3.get_url(@album_cover)} />
+      <img class="rounded-2xl w-[100px] lg:w-[200px]" src={FileServer.get_url(@album_cover)} />
       <div class="flex flex-col justify-evenly">
         <p class="text-xl font-bold"><%= cut_text @title %></p>
         <p class="text-sm"><%= cut_text @album_name %></p>
