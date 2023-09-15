@@ -13,6 +13,7 @@ defmodule BluetoothAmp.Umbrella.MixProject do
           applications: [
             bluetooth_amp: :permanent,
             bluetooth_amp_web: :permanent,
+            bluetoothctl: :permanent,
             player: :permanent,
             scanner: :permanent
           ]

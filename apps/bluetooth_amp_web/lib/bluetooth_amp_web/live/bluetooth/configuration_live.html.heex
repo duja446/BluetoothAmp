@@ -1,0 +1,16 @@
+<div>
+  <div>
+    <p>DISCOVERING</p>
+    <%= if @discovering? do %>
+      <p>YES</p>
+    <% else %>
+      <p>NO</p>
+    <% end %>
+    <button class="rounded-full bg-blue-500 text-3xl p-4" phx-click="scan">Scan</button>
+  </div>
+  <div>
+    <%= for mac <- @scanned_devices do %>
+      <.device_card mac={mac} />
+    <% end %>
+  </div>
+</div>

@@ -3,6 +3,7 @@ defmodule BluetoothAmpWeb.Music.CurrentSongLive do
   require Logger
   
   def mount(_params, _session, socket) do
+    Logger.debug("!!!!!!! current song mounted !!!!!!!!!!!!!1")
     if connected?(socket) do
       BluetoothAmpWeb.Endpoint.subscribe("player_state")
     end
@@ -22,11 +23,10 @@ defmodule BluetoothAmpWeb.Music.CurrentSongLive do
   end
 
   def handle_event("continue-pause", _, socket) do
-    s = socket.assigns[:playing]
-    if s do
-      BluetoothAmpWeb.PlayerState.pause()
-    else 
-      BluetoothAmpWeb.PlayerState.continue()
+    p = socket.assigns[:playing]
+    case p do
+      true -> BluetoothAmpWeb.PlayerState.pause()
+      false -> BluetoothAmpWeb.PlayerState.continue()
     end
     {:noreply, socket}
   end

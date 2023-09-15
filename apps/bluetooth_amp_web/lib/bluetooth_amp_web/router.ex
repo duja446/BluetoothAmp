@@ -20,6 +20,7 @@ defmodule BluetoothAmpWeb.Router do
     live "/", LibraryLive
     live "/albums", Music.AlbumListLive
     live "/albums/:id", Music.AlbumLive
+    live "/bluetooth", Bluetooth.ConfigurationLive
   end
 
   # Other scopes may use custom stacks.

@@ -53,7 +53,7 @@ defmodule BluetoothAmpWeb.MixProject do
       {:tailwind, "~> 0.1.8", runtime: Mix.env() == :dev},
       {:ex_fontawesome, "~> 0.7.2"},
       {:player, in_umbrella: true},
-      {:file_server, in_umbrella: true},
+      {:bluetoothctl, in_umbrella: true},
       {:json, "~> 1.4"}
     ]
   end

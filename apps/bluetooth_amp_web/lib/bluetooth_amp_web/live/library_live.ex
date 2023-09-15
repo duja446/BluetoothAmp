@@ -41,7 +41,7 @@ defmodule BluetoothAmpWeb.LibraryLive do
 
   def page_card(%{icon_name: _, icon_color: _, bg_color: _, text: _, redirect: _} = assigns) do
 ~H"""
-    <.link navigate={@redirect}>
+    <.link patch={@redirect}>
       <div class="flex gap-4 h-9 items-center">
         <div class={"rounded-full w-11 h-11 flex items-center justify-center #{@bg_color}"}>
           <FontAwesome.LiveView.icon name={@icon_name} type="solid" class={"w-6 #{@icon_color}"} />

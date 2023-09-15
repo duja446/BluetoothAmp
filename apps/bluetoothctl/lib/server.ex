@@ -11,12 +11,15 @@ defmodule Bluetoothctl.Server do
     Port.open({:spawn, "bluetoothctl"}, [:binary])
   end
 
-  def init(_) do
-    #PubSub.subscribe(pubsub, channel)
+  def init({pubsub, channel}) do
+    PubSub.subscribe(pubsub, channel)
     port = connect()
-    {:ok, %{port: port, 
+    {:ok, %{
+      port: port, 
       scanned_devices: MapSet.new(),
-      discovering?: false}}
+      discovering?: false,
+      pubsub: pubsub,
+      channel: channel}}
   end
 
   def scan_on() do
@@ -27,33 +30,34 @@ defmodule Bluetoothctl.Server do
     GenServer.cast(BluetoothctlServer, {:command, "scan off\n"})
   end
 
-  def get_scanned_devices() do
-    GenServer.call(BluetoothctlServer, {:get, :scanned_devices})
-  end
-
-  def handle_call({:get, field}, _from, state) do
-    {:reply, Map.get(state, field), state}
-  end
-
   def handle_cast({:command, cmd}, %{port: p} = state) do
     Port.command(p, cmd)
     {:noreply, state}
   end
 
-  def handle_info({port, {:data, data}}, %{scanned_devices: scanned_devices, discovering?: old_discovering?} = state) do
+  def handle_info({_port, {:data, data}}, 
+    %{scanned_devices: scanned_devices, discovering?: old_discovering?, pubsub: pubsub, channel: channel} = state) do
     discovering? = 
       case discovering?(data) do
         :yes -> true
         :no -> false
         :no_discovering_message -> old_discovering?
       end
+
     mac = extract_MAC(data)
     scanned_devices = add_device(discovering?, mac, scanned_devices)
+
+    push_devices(scanned_devices, pubsub, channel)
+
     IO.write(data)
     IO.write("\n") 
     IO.write(extract_MAC(data))
     IO.write("\n\n") 
     {:noreply, %{state | discovering?: discovering?, scanned_devices: scanned_devices}}
+  end
+
+  def handle_info(_, state) do
+    {:noreply, state}
   end
 
   def add_device(true, mac, scanned_devices) do
@@ -62,6 +66,10 @@ defmodule Bluetoothctl.Server do
 
   def add_device(false, _mac, scanned_devices) do
     scanned_devices
+  end
+
+  def push_devices(scanned_devices, pubsub, channel) do
+    PubSub.broadcast(pubsub, channel, {:devices, scanned_devices})
   end
 
   def discovering?(data) do
