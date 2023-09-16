@@ -1,4 +1,9 @@
-<div>
+<div id="bluetooth configuration" class="
+  transition duration-500 ease-out opacity-0 scale-95" 
+  {transition("opacity-0 scale-95", "opacity-100 scale-100")}>
+  <button class="rounded-full bg-blue-500 text-3xl p-4" phx-click="add scanned device">add</button>
+  <button class="rounded-full bg-blue-500 text-3xl p-4" phx-click="connect">connect</button>
+
   <div>
     <p>DISCOVERING</p>
     <%= if @discovering? do %>
@@ -9,8 +14,39 @@
     <button class="rounded-full bg-blue-500 text-3xl p-4" phx-click="scan">Scan</button>
   </div>
   <div>
-    <%= for mac <- @scanned_devices do %>
-      <.device_card mac={mac} />
-    <% end %>
+    <p class="text-2xl font-bold my-4">Known devices</p>
+    <div class="bg-gray-800 rounded-lg p-4 shadow-[inset_0_0px_10px_0_rgba(0,0,0,0.3)] flex flex-col gap-y-4"> 
+      <%= for {mac, name} <- @known_devices do %>
+        <div class="flex text-xl justify-between">
+          <p class={if @connected_to_mac == mac, do: "text-[#66BAEA]"}>
+            <span class="font-bold"><%= mac %></span>
+            <span class="mx-1">|</span>  
+            <%= name %>
+          </p>
+          <%= if @connected_to_mac == mac do %>
+            <p class="text-lg text-[#66BAEA]">Connected</p> 
+          <% else %>
+            <button class="rounded-full p-1 bg-zinc-700">
+              <FontAwesome.LiveView.icon name="link" type="solid" class="w-7 h-7 fill-[#66BAEA]" />
+            </button>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div>
+    <div class="flex items-center justify-between pr-3 my-4">
+      <p class="text-xl font-bold">Available devices</p>
+      <button class="w-6 h-6" phx-click="scan">
+        <FontAwesome.LiveView.icon name="arrows-rotate" type="solid" class={"w-6 h-6 fill-white #{if @discovering?, do: 'animate-spin', else: ''}"}/>
+      </button>
+    </div>
+    <div id="scanned devices" phx-update="append" class="flex flex-col gap-y-2">
+      <%= for {mac, name} <- @scanned_devices do %>
+        <div id={mac} class="transition duration-500 translate-x-[-100%]" {transition("translate-x-[-100%]", "translate-x-[0%]")}>
+          <.device_card mac={mac} name={name} />
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
