@@ -16,10 +16,10 @@ defmodule Bluetoothctl.Server do
     port = connect()
     {:ok, %{
       port: port, 
-      scanned_devices: %{},
       state: :standby,
       pubsub: pubsub,
-      channel: channel}}
+      channel: channel,
+      data_buffer: <<>>}}
   end
 
   def scan_on() do
@@ -38,6 +38,10 @@ defmodule Bluetoothctl.Server do
     GenServer.cast(BluetoothctlServer, {:command, :connect, mac})
   end
 
+  def disconnect() do
+    GenServer.cast(BluetoothctlServer, {:command, :disconnect})
+  end
+
   def connected_device() do
     GenServer.cast(BluetoothctlServer, {:command, :devices_connected})
   end
@@ -53,11 +57,7 @@ defmodule Bluetoothctl.Server do
   end
 
   def handle_cast({:command, :devices}, %{port: p} = state) do
-    # small delay so the state is set before we get data 
-    Task.start(fn -> 
-      Process.sleep(1500)
-      Port.command(p, "devices\n")
-    end)
+    Port.command(p, "devices\n")
     {:noreply, %{state | state: :get_devices}}
   end
 
@@ -66,96 +66,98 @@ defmodule Bluetoothctl.Server do
     {:noreply, %{state | state: {:attempt_connection, mac}}} 
   end
 
+  def handle_cast({:command, :disconnect}, %{port: p } = state) do
+    Port.command(p, "disconnect")
+    {:noreply, %{state | state: :attempt_disconnection}} 
+  end
+
   def handle_cast({:command, :devices_connected}, %{port: p} = state) do
-    Task.start(fn -> 
-      Process.sleep(1500)
-      Port.command(p, "devices Connected\n")
-    end)
+    Port.command(p, "devices Connected\n")
     {:noreply, %{state | state: :get_devices_connected}} 
   end
 
-  def handle_info({_port, {:data, data}}, 
-    %{scanned_devices: scanned_devices, state: :scan_on, pubsub: pubsub, channel: channel} = state) do
-
-    data
-    |> extract_info_new_device()
-    |> push_new_device(pubsub, channel)
-
-    Logger.debug(data)
-    Logger.debug(String.slice(data, 25..-1//1))
-    {:noreply, %{state | scanned_devices: scanned_devices}}
-  end
-
-  def handle_info({_port, {:data, data}}, 
-    %{state: :get_devices, pubsub: pubsub, channel: channel} = state) do
+  def handle_info({_port, {:data, data}},
+    %{data_buffer: data_buffer} = state) do
     
-    known_devices = extract_devices(data)
-    Logger.debug(inspect data)
-    Logger.debug(inspect known_devices)
-
-    push_known_devices(known_devices, pubsub, channel)
-
-    {:noreply, %{state | state: :standby}}
-  end
-
-  def handle_info({_port, {:data, data}}, 
-    %{state: :get_devices_connected, pubsub: pubsub, channel: channel} = state) do
-    
-    Logger.debug(data)
-    connected_device = extract_devices(data) |> Map.keys() |> Enum.at(0, "")
-    Logger.debug(inspect connected_device)
-
-    push_connected(connected_device, pubsub, channel)
-
-    {:noreply, %{state | state: :standby}}
-  end
-
-  def handle_info({_port, {:data, data}}, 
-    %{state: {:attempt_connection, mac}, pubsub: pubsub, channel: channel} = state) do
-    
-    case connection_successful?(data) do
-      :yes -> push_connected(mac, pubsub, channel)
-      :no -> push_connection_failed(mac, pubsub, channel)
-      :no_connection_data -> ""
-    end
-
-    {:noreply, %{state | state: :standby}}
-  end
-
-  def connection_successful?(data) do
-    cond do
-      String.contains?(data, "Connection successful") -> :yes
-      String.contains?(data, "Failed to connect") -> :no
-      true -> :no_connection_data
+    data_buffer = data_buffer <> data
+    Logger.debug("DATA: #{inspect data}")
+    Logger.debug("DATA BUFFER: #{inspect data_buffer}")
+    if received_all(data_buffer) do
+      Logger.debug("received all")
+      handle_data(data_buffer, state)
+      {:noreply, %{state | data_buffer: <<>>}}
+    else
+      Logger.debug("didnt receive all")
+      {:noreply, %{state | data_buffer: data_buffer}}
     end
   end
 
   def handle_info(_, state) do
-    {:noreply, state}
+    {:noreply, state} 
   end
 
-  def add_device({mac, name}, scanned_devices) do
-    Map.put(scanned_devices, mac, name)
+  def handle_data(data, %{state: :standby}) do
+    Logger.debug("STANDBY DATA: #{inspect data}")
   end
 
-  def push_connected(mac, pubsub, channel) do
-    PubSub.broadcast(pubsub, channel, {:connected, mac})
+  def handle_data(data, %{state: :scan_on, pubsub: pubsub, channel: channel}) do
+    new_device = extract_info_new_device(data)
+    Logger.debug("NEW DEVICE: #{inspect new_device}")
+    if new_device do 
+      PubSub.broadcast(pubsub, channel, {:scanned_device, new_device})
+    end
   end
 
-  def push_connection_failed(mac, pubsub, channel) do
-    PubSub.broadcast(pubsub, channel, {:connection_failed, mac})
-  end
-
-  def push_new_device(nil, _, _) do
-    
-  end
-
-  def push_new_device(scanned_devices, pubsub, channel) do
-    PubSub.broadcast(pubsub, channel, {:scanned_device, scanned_devices})
-  end
-
-  def push_known_devices(known_devices, pubsub, channel) do
+  def handle_data(data, %{state: :get_devices, pubsub: pubsub, channel: channel}) do
+    known_devices = extract_devices(data)
+    Logger.debug("KNOWN DEVICES: #{inspect known_devices}")
     PubSub.broadcast(pubsub, channel, {:known_devices, known_devices})
+  end
+
+  def handle_data(data, %{state: :get_devices_connected, pubsub: pubsub, channel: channel}) do
+    connected_device_mac = extract_devices(data) |> Map.keys() |> Enum.at(0, "")
+    Logger.debug("CONNECTED DEVICE #{inspect connected_device_mac}")
+    PubSub.broadcast(pubsub, channel, {:connected, connected_device_mac})
+  end
+
+  def handle_data(data, %{state: {:attempt_connection, mac}, pubsub: pubsub, channel: channel}) do
+    case connection_successful?(data) do
+      true -> 
+        Logger.debug("CONNECTION SUCCESSFUL TO: #{mac}")
+        PubSub.broadcast(pubsub, channel, {:connected, mac})
+      false -> 
+        Logger.debug("CONNECTION UNSUCCESSFUL TO: #{mac}")
+        PubSub.broadcast(pubsub, channel, {:connection_failed, mac})
+      :no_connection_string -> 
+        Logger.debug("NO CONNECTION STRING")
+        nil
+    end
+  end
+
+  def handle_data(data, %{state: :attempt_disconnection, pubsub: pubsub, channel: channel}) do
+    case disconnection_successful?(data) do
+      true -> PubSub.broadcast(pubsub, channel, :disconnected)
+      false -> PubSub.broadcast(pubsub, channel, :disconnection_failed)
+    end
+  end
+
+  def connection_successful?(data) do
+    cond do
+      String.contains?(data, "Connection successful") -> true
+      String.contains?(data, "Failed to connect") -> false
+      true -> :no_connection_string
+    end
+  end
+
+  def disconnection_successful?(data) do
+    cond do
+      String.contains?(data, "Successful disconnected") -> true
+      String.contains?(data, "Failed to disconnect") -> false
+    end
+  end
+
+  def received_all(data) do
+    Regex.match?(~r/\e\[0;94m\[(.*?)\]\e\[0m#/, data) 
   end
 
   def extract_info_new_device(string) do
