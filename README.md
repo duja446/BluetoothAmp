@@ -127,14 +127,14 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 
 
 <!-- ROADMAP -->
-## Roadmap
+## TODO
 
 - [x] Scan button 
 - [x] Base page
 - [ ] Write the usage page
 - [x] Support .mp3 files
 - [ ] Music seek
-- [ ] Bluetooth connection from the app
+- [x] Bluetooth connection from the app
 - [ ] Shuffle
 - [ ] Playlists
 - [ ] List songs by:
