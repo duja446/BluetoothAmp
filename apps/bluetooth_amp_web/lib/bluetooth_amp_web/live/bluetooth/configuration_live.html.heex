@@ -6,14 +6,7 @@
     <.error_popup error_msg={@error_msg} />
   <% end %>
 
-  <div class="flex gap-4 h-11 items-center ">
-    <div class={"rounded-full h-11 w-11 flex justify-center items-center bg-[#EA6666]"}>
-      <FontAwesome.LiveView.icon name="bluetooth-b" type="brands" class={"h-9 w-9 fill-white"}/>
-    </div>
-    <p class="text-2xl font-bold">Bluetooth configuration</p>
-  </div>
-
-
+  <BluetoothAmpWeb.MyComponents.page_header bg="bg-[#EA6666]" icon_name="bluetooth-b" icon_type="brands" text="Bluetooth configuration" /> 
 
   <div>
     <p class="text-xl font-bold my-4">Known devices</p>

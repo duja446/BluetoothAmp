@@ -18,6 +18,7 @@ defmodule BluetoothAmpWeb.Router do
     pipe_through :browser
 
     live "/", LibraryLive
+    live "/all_songs", Music.AllSongsLive
     live "/albums", Music.AlbumListLive
     live "/albums/:id", Music.AlbumLive
     live "/bluetooth", Bluetooth.ConfigurationLive

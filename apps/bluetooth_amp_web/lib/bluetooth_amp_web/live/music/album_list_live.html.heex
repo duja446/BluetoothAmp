@@ -1,8 +1,11 @@
-<div class="grid grid-cols-2 gap-y-8 gap-x-6 p-4  
-  transition duration-500 ease-out opacity-0 scale-95" 
+<div class="transition duration-500 ease-out opacity-0 scale-95" 
   {transition("opacity-0 scale-95", "opacity-100 scale-100")}>
 
-  <%= for album <- BluetoothAmp.Music.list_albums() do %>
-    <.album_card id={album.id} name={album.name} cover={album.cover}/>
-  <% end %>
+  <BluetoothAmpWeb.MyComponents.page_header bg="bg-[#7CACD3]" icon_name="compact-disc" icon_type="solid" text="Albums" /> 
+
+  <div class="grid grid-cols-2 gap-y-8 gap-x-6 p-4">
+    <%= for album <- BluetoothAmp.Music.list_albums() do %>
+      <.album_card id={album.id} name={album.name} cover={album.cover}/>
+    <% end %>
+  </div>
 </div>

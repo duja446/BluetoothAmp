@@ -9,31 +9,22 @@ defmodule BluetoothAmpWeb.Music.CurrentSongLive do
     end
     {:ok, 
       socket
-      |> assign_new(:current_song, fn -> BluetoothAmpWeb.PlayerState.get_current_song() end)
-      |> assign_new(:playing, fn -> BluetoothAmpWeb.PlayerState.get_playing() end)
+      |> assign_new(:current_song, fn -> Player.Server.get_current_song() end)
+      |> assign_new(:playing?, fn -> Player.Server.get_playing?() end)
     }
   end
 
-  def handle_info(%Phoenix.Socket.Broadcast{event: "current_song", payload: song}, socket) do
-    {:noreply, assign(socket, :current_song, song) |> assign(:playing, true)}
-  end
-
-  def handle_info(%{event: "continue_pause", payload: s}, socket) do
-    {:noreply, assign(socket, :playing, s)} 
+  def handle_info({:current_song, song}, socket) do
+    {:noreply, assign(socket, :current_song, song) |> assign(:playing?, true)}
   end
 
   def handle_event("continue-pause", _, socket) do
-    p = socket.assigns[:playing]
+    p = socket.assigns[:playing?]
     case p do
-      true -> BluetoothAmpWeb.PlayerState.pause()
-      false -> BluetoothAmpWeb.PlayerState.continue()
+      true -> Player.Server.pause()
+      false -> Player.Server.continue()
     end
-    {:noreply, socket}
-  end
-
-  def get_img() do
-    img = Enum.random(["capy.jpg", "oak.jpg"])
-    "/images/#{img}"
+    {:noreply, assign(socket, :playing?, ! p)}
   end
 
 end

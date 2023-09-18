@@ -6,14 +6,14 @@
 
     <img src={FileServer.get_url(@album.cover)} class="w-full h-[25rem] blur-sm"/>
     <div class="grid grid-cols-7 grid-rows-[repeat(8,_minmax(0,_1fr))] h-[16rem] w-full absolute top-0 left-0 gap-x-1 px-3 py-2">
-      <div class="z-1 col-span-7 row-start-5 opacity-90 lex items-center">
+      <div class="z-1 col-span-7 row-start-5 opacity-90 flex items-center">
         <p class="text-lg bg-neutral-900 rounded-xl px-2"><%= cut_text(@album.name) %></p>
       </div>
       <div class="z-1 col-span-7 row-start-6 opacity-90 flex items-center">
-        <p class="text-sm bg-neutral-900 rounded-xl px-2 py-1">ARTIST</p>
+        <p class="text-sm bg-neutral-900 rounded-xl px-2 py-1"><%= @album.artist.name %></p>
       </div>
       <div class="z-1 col-span-7 row-start-7 opacity-90 flex items-center">
-        <p class="text-sm bg-neutral-900 rounded-xl px-2 py-1">ALBUM INFO</p>
+        <p class="text-sm bg-neutral-900 rounded-xl px-2 py-1">𝄞 <%= album_info(@album) %></p>
       </div>
       <div class="z-1 col-span-1 col-start-1 bg-neutral-900 rounded-xl row-start-[8] opacity-90 flex items-center flex justify-center">
         <FontAwesome.LiveView.icon name="shuffle" type="solid" class="h-[50%] fill-white" />
@@ -27,6 +27,6 @@
     </div>
   </div>
   <%= for song <- @album.songs do %>
-    <.song_card title={song.name} duration={song.duration} track={song.track} album_cover={@album.cover} album_name={@album.name} id={song.id}/>
+    <BluetoothAmpWeb.MyComponents.song_card title={song.name} duration={song.duration} track={song.track} album_cover={@album.cover} album_name={@album.name} id={song.id}/>
   <% end %>
 </div>

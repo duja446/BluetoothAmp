@@ -129,18 +129,19 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## TODO
 
-- [x] Scan button 
-- [x] Base page
+- [x] Scan songs
+- [ ] Playlists functionality
+- [ ] Shuffle
+- [ ] More pages:
+    - [x] Library
+    - [x] All songs
+    - [ ] Artists
+    - [ ] Liked songs
+    - [ ] Playlists
 - [ ] Write the usage page
 - [x] Support .mp3 files
 - [ ] Music seek
 - [x] Bluetooth connection from the app
-- [ ] Shuffle
-- [ ] Playlists
-- [ ] List songs by:
-    - [ ] Author
-    - [ ] Genre
-- [ ] Raiting system
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
