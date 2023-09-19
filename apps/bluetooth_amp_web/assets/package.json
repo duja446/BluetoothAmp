@@ -1,1 +1,5 @@
-{}
+{
+  "dependencies": {
+    "wavesurfer.js": "^6.4.0"
+  }
+}

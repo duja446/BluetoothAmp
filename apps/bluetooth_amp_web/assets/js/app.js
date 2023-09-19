@@ -24,6 +24,7 @@ import "phoenix_html"
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
+import WaveSurfer from "wavesurfer.js"
 
 let Hooks = {
   transition: {
@@ -43,6 +44,38 @@ let Hooks = {
       this.el.classList.remove(...this.from)
     }
 
+  },
+  Waveform: {
+    mounted(){
+      let duration = this.el.dataset.duration
+      console.log(this.el.id)
+      const wavesurfer = WaveSurfer.create({
+        container: "#" + this.el.id,
+        barWidth: 3,
+        cursorWidth: 1,
+        height:80,
+        waveColor: '#4F4A85',
+        progressColor: '#383351',
+        normalize: true,
+      })
+
+      wavesurfer.on('dblclick', () => {
+        let time = wavesurfer.getCurrentTime()
+        console.log('Seeking', time)
+        this.pushEvent("seeking", time) 
+      })
+
+      this.handleEvent("peaks", ({peaks}) => {
+        console.log(peaks)
+        wavesurfer.backend.setPeaks(peaks, duration)
+        wavesurfer.drawBuffer()
+      })
+
+      this.handleEvent("current_time", ({current_time}) => {
+        console.log(current_time)
+        wavesurfer.setCurrentTime(current_time)
+      })
+    }
   }
 }
 
@@ -70,4 +103,5 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
+
 

@@ -5,7 +5,7 @@ config :player,
   mpd_port: 6600
 
 config :file_server, 
-  address: "localhost:4001"
+  address: "192.168.0.23:4001"
 
 
 # Configure your database
@@ -24,7 +24,7 @@ config :bluetooth_amp, BluetoothAmp.Repo,
 config :bluetooth_amp_web, BluetoothAmpWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {127, 0, 0, 1}, port: 4000],
+  http: [ip: {0, 0, 0, 0}, port: 4000],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,

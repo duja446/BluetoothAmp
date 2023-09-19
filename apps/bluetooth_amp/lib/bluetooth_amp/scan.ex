@@ -7,6 +7,10 @@ defmodule BluetoothAmp.Scan do
     for _ <- 1..len, into: "", do: <<Enum.random('0123456789adbcdef')>>
   end
 
+  # def extract_waveform(song_path) do
+  #   System.cmd("audiowaveform", ["-i", song_path, "--output-format", "dat"])
+  # end
+
   def run() do
     Logger.info(File.cwd!())
     Repo.delete_all Music.Song  

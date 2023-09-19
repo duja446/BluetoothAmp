@@ -23,7 +23,8 @@ defmodule Player.Server do
       channel: channel,
       port: port,
       current_song: nil,
-      playing?: false
+      playing?: false,
+      state: :standby
     }}
   end
 
@@ -47,12 +48,25 @@ defmodule Player.Server do
     GenServer.cast(PlayerServer, :pause)
   end
 
+  def seek_to(time) do
+    GenServer.cast(PlayerServer, {:seek_to, time}) 
+  end
+
+  def start_query_stats_updater() do
+    :timer.send_interval(1_000, PlayerServer, :query_stats)
+  end
+
   def handle_call(:get_current_song, _calller, %{current_song: current_song} = state) do
     {:reply, current_song, state}
   end
 
   def handle_call(:get_playing?, _calller, %{playing?: playing?} = state) do
     {:reply, playing?, state}
+  end
+
+  def handle_info(:query_stats, %{port: port} = state) do
+    Port.command(port, "status\n")
+    {:noreply, %{state | state: :query_stats}}
   end
 
   def handle_cast({:play, song}, %{port: port, pubsub: pubsub, channel: channel} = state) do
@@ -73,6 +87,11 @@ defmodule Player.Server do
     {:noreply, %{state | playing?: false}}
   end
 
+  def handle_cast({:seek_to, time}, %{port: port} = state) do
+    Port.command(port, "seekcur #{time}\n")
+    {:noreply, state}
+  end
+
   def handle_info(_, %{port: :error} = state) do
     {:noreply, state}
   end
@@ -82,8 +101,29 @@ defmodule Player.Server do
     {:noreply, %{state | port: port}}
   end
 
-  def handle_info(info, state) do
-    Logger.debug(inspect info)
+  def handle_info({:tcp, port, data}, %{state: :standby} = state) do
+    Logger.debug("STANDBY DATA: #{inspect data}")
+    {:noreply, state}
+  end
+
+  def handle_info({:tcp, port, data}, %{pubsub: pubsub, channel: channel, state: :query_stats} = state) do
+    Logger.debug(inspect data)
+    stats = 
+      String.split(data, "\n")
+        |> Enum.slice(0..-3//1)
+        |> Enum.reduce(%{}, 
+          fn line, acc -> 
+            [field, data] = String.split(line, ": ")
+            field = String.to_atom(field)
+            Map.put(acc, field, data)
+          end)
+    
+    Logger.debug(inspect stats)
+    Phoenix.PubSub.broadcast(pubsub, channel, {:stats, stats})
+    {:noreply, %{state | state: :standby}}
+  end
+
+  def handle_info(_, state) do
     {:noreply, state}
   end
 

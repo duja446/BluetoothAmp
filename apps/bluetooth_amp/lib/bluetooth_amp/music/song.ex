@@ -9,6 +9,7 @@ defmodule BluetoothAmp.Music.Song do
     field :track, :integer
     field :duration, :integer
     field :path, :string
+    field :waveform, :binary
     belongs_to :album, BluetoothAmp.Music.Album
 
     timestamps()
@@ -17,7 +18,7 @@ defmodule BluetoothAmp.Music.Song do
   @doc false
   def changeset(song, attrs) do
     song
-    |> cast(attrs, [:name, :track, :played_times, :last_played, :duration, :path])
+    |> cast(attrs, [:name, :track, :played_times, :last_played, :duration, :path, :waveform])
     |> validate_required([:name, :track, :duration, :path])
   end
 end
