@@ -17,7 +17,8 @@ defmodule BluetoothAmpWeb.Music.CurrentSongLive do
   end
 
   def handle_info({:current_song, song}, state) do
-    {:noreply, assign(state, :current_song, song) |> assign(:playing?, true)}
+    peaks = get_peaks(song)
+    {:noreply, assign(state, :current_song, song) |> assign(:playing?, true) |> push_event("peaks", %{peaks: peaks})}
   end
 
   def handle_info({:stats, info}, socket) do
@@ -36,24 +37,39 @@ defmodule BluetoothAmpWeb.Music.CurrentSongLive do
     {:noreply, assign(socket, :playing?, ! p)}
   end
 
+  def handle_event("forward", _, socket) do
+    current_song = socket.assigns[:current_song]
+    Player.Server.play_song(BluetoothAmp.Music.get_next_song!(current_song))
+    {:noreply, socket}
+  end
+
+  def handle_event("backward", _, socket) do
+    current_song = socket.assigns[:current_song]
+    Player.Server.play_song(BluetoothAmp.Music.get_previous_song!(current_song))
+    {:noreply, socket}
+  end
+  
   def handle_event("expand", _, socket) do
-    {:noreply, assign(socket, :expanded?, true)}
-  end
-
-  def get_peaks() do
-    File.read!("/home/duja-pc/Music/test.json") |> JSON.decode!() |> Map.get("data")
-  end
-
-  def handle_event("click", _, socket) do
-    peaks = get_peaks()
-    Logger.debug(inspect peaks)
-    {:noreply, push_event(socket, "peaks", %{peaks: peaks}) }
+    Logger.debug(socket.assigns[:current_song])
+    expanded? = socket.assigns[:expanded?]
+    peaks = get_peaks(socket.assigns[:current_song])
+    if ! expanded? do
+      {:noreply, assign(socket, :expanded?, ! expanded?) |> push_event("peaks", %{peaks: peaks})}
+    else
+      {:noreply, assign(socket, :expanded?, ! expanded?)}
+    end
   end
 
   def handle_event("seeking", time, socket) do
     Logger.debug("Seeking #{time}")
     Player.Server.seek_to(time)
     {:noreply, socket}
+  end
+
+  def get_peaks(song) do
+    song
+    |> Map.get(:waveform)
+    |> :binary.bin_to_list()
   end
 
 end

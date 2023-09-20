@@ -15,7 +15,7 @@ defmodule BluetoothAmpWeb.Application do
       # Start a worker by calling: BluetoothAmpWeb.Worker.start_link(arg)
       # {BluetoothAmpWeb.Worker, arg}
       {Player.Server, {BluetoothAmp.PubSub, "player_state"}},
-      #{Bluetoothctl.Server, {BluetoothAmp.PubSub, "bluetoothctl"}},
+      {Bluetoothctl.Server, {BluetoothAmp.PubSub, "bluetoothctl"}},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

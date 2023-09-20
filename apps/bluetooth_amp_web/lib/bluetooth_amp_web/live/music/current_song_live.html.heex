@@ -1,5 +1,15 @@
 <%= if @current_song != nil do %>
-  <div class="lg:w-1/2 md:w-2/3 fixed bottom-0 z-2 flex flex-col bg-neutral-900">
+  <div class="lg:w-1/2 md:w-2/3 w-full fixed bottom-0 z-10 flex flex-col bg-[#0B0B0B] border-[#939DBD] border-t-[3px]  rounded-t-xl">
+    <%= if ! @expanded? do %>
+      <button phx-click="expand" class="self-center pt-2">
+        <FontAwesome.LiveView.icon name="arrow-up" type="solid" class="h-6 w-6 fill-white" />
+      </button>
+    <% else %>
+      <button phx-click="expand" class="self-center pt-2">
+        <FontAwesome.LiveView.icon name="arrow-down" type="solid" class="h-6 w-6 fill-white" />
+      </button>
+    <% end %>
+
     <div class="flex justify-between m-1 p-2 rounded-xl ">
       <div class="flex gap-x-4">
         <img class="rounded-xl h-20" src={FileServer.get_url(@current_song.album.cover)} />
@@ -8,20 +18,26 @@
           <p class="text-sm"><%= cut_text @current_song.album.name %></p>
         </div>
       </div>
-      <div class="flex gap-x-4">
-        <div phx-click="continue-pause" class="col-span-1 flex justify-center items-center">
+      <div class="flex gap-x-6 bg-zinc-700 rounded-xl h-fit p-1 self-center">
+        <button phx-click="back" class="flex justify-center items-center">
+          <FontAwesome.LiveView.icon name="backward" type="solid" class="h-8 fill-white" />
+        </button>
+        <button phx-click="continue-pause" class="flex justify-center items-center">
           <%= if @playing? do %>
             <FontAwesome.LiveView.icon name="pause" type="solid" class="h-8 fill-white"/>
           <% else %>
             <FontAwesome.LiveView.icon name="play" type="solid" class="h-8 fill-white"/>
           <% end %>
-        </div>
-        <button phx-click="expand">Expand</button>
+        </button>
+        <button phx-click="forward" class="flex justify-center items-center">
+          <FontAwesome.LiveView.icon name="forward" type="solid" class="h-8 fill-white" />
+        </button>
       </div>
     </div>
   <%= if @expanded? do %>
-    <button phx-click="click">CLICK</button>
-    <div id="waveform" phx-update="ignore" phx-hook="Waveform" data-duration={406.00}></div>
+    <div class="p-4">
+    <div id="waveform" phx-update="ignore" phx-hook="Waveform" data-duration={@current_song.duration / 1000}></div>
+    </div>
   <% end %>
 
   </div>

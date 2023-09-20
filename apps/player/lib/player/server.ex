@@ -24,6 +24,7 @@ defmodule Player.Server do
       port: port,
       current_song: nil,
       playing?: false,
+      timer: nil,
       state: :standby
     }}
   end
@@ -53,7 +54,11 @@ defmodule Player.Server do
   end
 
   def start_query_stats_updater() do
-    :timer.send_interval(1_000, PlayerServer, :query_stats)
+    GenServer.cast(PlayerServer, {:start_timer, :query_stats})
+  end
+
+  def stop_timer() do
+    GenServer.cast(PlayerServer, :stop_timer)
   end
 
   def handle_call(:get_current_song, _calller, %{current_song: current_song} = state) do
@@ -69,11 +74,23 @@ defmodule Player.Server do
     {:noreply, %{state | state: :query_stats}}
   end
 
+  def handle_cast({:start_timer, :query_stats}, state) do
+    {:ok, timer} = :timer.send_interval(30, PlayerServer, :query_stats)
+    {:noreply, %{state | timer: timer}}
+  end
+
+  def handle_cast(:stop_timer, %{timer: timer} = state) do
+    if timer != nil do
+      :timer.cancel(timer)
+    end
+    {:noreply, %{state | timer: nil}}
+  end
+
   def handle_cast({:play, song}, %{port: port, pubsub: pubsub, channel: channel} = state) do
     Port.command(port, "clear\n")
     Port.command(port, "add \"#{rel_path song.path}\"\n")
     Port.command(port, "play 0\n")
-    Phoenix.PubSub.broadcast(pubsub, channel, {:current_song, song})
+    push_current_song(pubsub, channel, song)
     {:noreply, %{state | current_song: song, playing?: true}}
   end
 
@@ -129,5 +146,9 @@ defmodule Player.Server do
 
   defp rel_path(path) do
     Path.relative_to(path, Path.expand("~/Music"))
+  end
+
+  def push_current_song(pubsub, channel, song) do
+    Phoenix.PubSub.broadcast(pubsub, channel, {:current_song, song})
   end
 end

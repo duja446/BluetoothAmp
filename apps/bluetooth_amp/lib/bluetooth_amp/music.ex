@@ -74,6 +74,15 @@ defmodule BluetoothAmp.Music do
     Album.changeset(album, attrs)
   end
 
+  def get_number_of_songs(id) do
+    query = from a in Album,
+      where: a.id == ^id,
+      join: s in Song,
+      on:   a.id  == s.album_id,
+      select: count(s.album_id)
+    Repo.one!(query)
+  end
+
 
   def list_songs do
     Repo.all(Song)
@@ -89,12 +98,17 @@ defmodule BluetoothAmp.Music do
 
   def get_song!(id), do: Repo.get!(Song, id)
 
-  def get_song_full!(id) do
-    Song
-    |> where([song], song.id == ^id)
+  def full_song_query(q) do
+    q
     |> join(:left, [song], album in assoc(song, :album))
     |> join(:left, [song, album], artist in assoc(album, :artist))
     |> preload([song, album, artist], [album: {album, artist: artist}])
+  end
+
+  def get_song_full!(id) do
+    Song
+    |> where([song], song.id == ^id)
+    |> full_song_query()
     |> Repo.one!()
   end
 
@@ -107,6 +121,26 @@ defmodule BluetoothAmp.Music do
       select: a.name,
       where: s.id == ^song.id
     Repo.one!(query)
+  end
+
+  def get_next_song!(%Song{track: track, album_id: album_id}) do
+    number_of_songs = get_number_of_songs(album_id)
+    new_track_number = rem(track, number_of_songs) + 1
+    Song
+    |> where([song], song.album_id == ^album_id)
+    |> where([song], song.track == ^new_track_number)
+    |> full_song_query()
+    |> Repo.one!()
+  end
+
+  def get_previous_song!(%Song{track: track, album_id: album_id}) do
+    number_of_songs = get_number_of_songs(album_id)
+    new_track_number = rem(track, number_of_songs) - 1
+    Song
+    |> where([song], song.album_id == ^album_id)
+    |> where([song], song.track == ^new_track_number)
+    |> full_song_query()
+    |> Repo.one!()
   end
 
   def create_song(%Album{} = a, attrs \\ %{}) do

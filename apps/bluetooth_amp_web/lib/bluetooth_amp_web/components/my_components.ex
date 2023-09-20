@@ -30,7 +30,7 @@ defmodule BluetoothAmpWeb.MyComponents do
   attr :text, :string, required: true
   def page_header(assigns) do
 ~H"""
-  <div class="flex justify-between items-center">
+  <div class="flex justify-between items-center px-3">
     <div class="flex gap-4 h-11 items-center ">
       <div class={"rounded-full h-11 w-11 flex justify-center items-center #{@bg} p-2"}>
         <FontAwesome.LiveView.icon name={@icon_name} type={@icon_type} class={"h-9 w-9 fill-white"}/>

@@ -51,12 +51,15 @@ let Hooks = {
       console.log(this.el.id)
       const wavesurfer = WaveSurfer.create({
         container: "#" + this.el.id,
-        barWidth: 3,
-        cursorWidth: 1,
-        height:80,
-        waveColor: '#4F4A85',
-        progressColor: '#383351',
         normalize: true,
+
+        barRadius: 5,
+        barWidth: 6,
+        height:90,
+        cursorWidth: 0,
+        waveColor: '#A7A7A7',
+        progressColor: '#66BAEA',
+
       })
 
       wavesurfer.on('dblclick', () => {

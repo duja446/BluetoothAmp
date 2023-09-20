@@ -7,9 +7,10 @@ defmodule BluetoothAmp.Scan do
     for _ <- 1..len, into: "", do: <<Enum.random('0123456789adbcdef')>>
   end
 
-  # def extract_waveform(song_path) do
-  #   System.cmd("audiowaveform", ["-i", song_path, "--output-format", "dat"])
-  # end
+  def extract_waveform(song_path) do
+    {data, _} = System.cmd("audiowaveform", ["-i", song_path, "--output-format", "dat", "--bits", "8", "--pixels-per-second", "100"])
+    data
+  end
 
   def run() do
     Logger.info(File.cwd!())
@@ -31,7 +32,11 @@ defmodule BluetoothAmp.Scan do
             FileServer.upload(random_name, cover_path, 50)
 
             {:ok, album} = Music.create_album(artist, %{name: name, cover: random_name})
-            Enum.map(songs, fn song -> Music.create_song(album, song) end)
+            Enum.map(songs, fn song -> 
+              waveform = extract_waveform(song.path)
+              Music.create_song(album, Map.put(song, :waveform, waveform)) 
+
+            end)
 
           end
         )

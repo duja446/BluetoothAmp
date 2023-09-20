@@ -140,7 +140,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
     - [ ] Playlists
 - [ ] Write the usage page
 - [x] Support .mp3 files
-- [ ] Music seek
+- [x] Music seek
 - [x] Bluetooth connection from the app
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -189,7 +189,7 @@ Project Link: [https://github.com/duja446/BluetoothAmp](https://github.com/duja4
 [stars-url]: https://github.com/duja446/duja446/stargazers
 [license-shield]: https://img.shields.io/github/license/duja446/BluetoothAmp.svg?style=for-the-badge
 [license-url]: https://github.com/duja446/BluetoothAmp/blob/master/LICENSE.txt
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: images/anchovy.png
 
 [Elixir]: https://img.shields.io/badge/elixir-%234B275F.svg?style=for-the-badge&logo=elixir&logoColor=white
 [Elixir-url]: https://elixir-lang.org/
