@@ -17,6 +17,10 @@ defmodule BluetoothAmp.Music do
     Repo.get_by!(Artist, name: name)
   end
 
+  def get_artist_with_albums!(id) do
+    Repo.get(Artist, id) |> Repo.preload(:albums)
+  end
+
 
   def create_artist(attrs \\ %{}) do
     %Artist{}

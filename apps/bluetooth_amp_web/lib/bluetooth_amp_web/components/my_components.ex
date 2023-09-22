@@ -46,4 +46,29 @@ defmodule BluetoothAmpWeb.MyComponents do
 """
 
   end
+
+  attr :id, :any, required: true
+  attr :name, :string, required: true
+  attr :cover, :string, required: true
+  def album_card(assigns) do
+~H"""
+    <.link navigate={"/albums/#{@id}"}>
+      <div>
+        <img src={FileServer.get_url(@cover)} class="rounded-xl h-full w-full"/>
+        <p class="font-bold"><%= cut_text(@name) %></p>
+      </div>
+    </.link>
+    """
+  end
+
+  attr :album_list, :map, required: true
+  def album_grid(assigns) do
+~H"""    
+  <div class="grid grid-cols-2 gap-y-8 gap-x-6 p-4">
+    <%= for album <- @album_list do %>
+      <.album_card id={album.id} name={album.name} cover={album.cover}/>
+    <% end %>
+  </div>
+"""
+  end
 end

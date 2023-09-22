@@ -135,7 +135,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [ ] More pages:
     - [x] Library
     - [x] All songs
-    - [ ] Artists
+    - [x] Artists
     - [ ] Liked songs
     - [ ] Playlists
 - [ ] Write the usage page
