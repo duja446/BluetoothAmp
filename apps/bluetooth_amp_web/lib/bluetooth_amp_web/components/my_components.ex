@@ -2,28 +2,6 @@ defmodule BluetoothAmpWeb.MyComponents do
   use Phoenix.Component
   import BluetoothAmpWeb.LiveHelpers
 
-  attr :id, :any, required: true
-  attr :title, :string, required: true
-  attr :duration, :integer, required: true
-  attr :track, :integer, required: true
-  attr :album_name, :string, required: true
-  attr :album_cover, :string, required: true
-  def song_card(assigns) do
-~H"""
-    <div phx-click="play" phx-value-song_id={@id} class="flex m-3 gap-x-[1rem] m-0 p-3 rounded-xl mx-2 hover:bg-neutral-900">
-      <img class="rounded-2xl w-[100px] lg:w-[200px]" src={FileServer.get_url(@album_cover)} />
-      <div class="flex flex-col justify-evenly">
-        <p class="text-xl font-bold"><%= cut_text @title %></p>
-        <p class="text-sm"><%= cut_text @album_name %></p>
-        <div class="flex items-center">
-          <FontAwesome.LiveView.icon name="guitar" type="solid" class="w-4 h-4 fill-slate-400"/>
-          <p class="text-xs text-slate-400 font-semibold "><%= duration_str(@duration) %></p>
-        </div>
-      </div>
-    </div>
-    """
-  end
-
   attr :bg, :string, required: true
   attr :icon_name, :string, required: true
   attr :icon_type, :string, required: true

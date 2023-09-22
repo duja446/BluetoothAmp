@@ -92,11 +92,25 @@ defmodule BluetoothAmp.Music do
     Repo.all(Song)
   end
 
+  def list_liked_songs do
+    Song
+    |> where([song], song.liked == true)
+    |> Repo.all()
+  end
+
   def list_songs_with_album do
     Song
     |> join(:left, [song], album in assoc(song, :album))
     |> order_by([asc: :name])
     |> preload(:album)
+    |> Repo.all()
+  end
+
+  def get_songs_with_album(list_of_ids) do
+    Song
+    |> where([song], song.id in ^list_of_ids)
+    |> preload(:album)
+    |> select([song], {song.id, song})
     |> Repo.all()
   end
 
@@ -145,6 +159,12 @@ defmodule BluetoothAmp.Music do
     |> where([song], song.track == ^new_track_number)
     |> full_song_query()
     |> Repo.one!()
+  end
+
+  def like_song(id) do
+    song = Repo.get!(Song, id) 
+    Song.changeset(song, %{liked: ! song.liked})
+    |> Repo.update()
   end
 
   def create_song(%Album{} = a, attrs \\ %{}) do

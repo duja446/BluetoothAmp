@@ -132,12 +132,11 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [x] Scan songs
 - [ ] Playlists functionality
 - [ ] Shuffle
-- [ ] More pages:
+- [x] More pages:
     - [x] Library
     - [x] All songs
     - [x] Artists
-    - [ ] Liked songs
-    - [ ] Playlists
+    - [x] Liked songs
 - [ ] Write the usage page
 - [x] Support .mp3 files
 - [x] Music seek

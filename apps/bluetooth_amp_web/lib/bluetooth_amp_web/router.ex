@@ -19,6 +19,7 @@ defmodule BluetoothAmpWeb.Router do
 
     live "/", LibraryLive
     live "/all_songs", Music.AllSongsLive
+    live "/liked_songs", Music.LikedSongsLive
     live "/artists", Music.ArtistListLive
     live "/artists/:id", Music.ArtistLive
     live "/albums", Music.AlbumListLive
