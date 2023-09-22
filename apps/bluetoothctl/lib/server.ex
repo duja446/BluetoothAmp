@@ -67,7 +67,7 @@ defmodule Bluetoothctl.Server do
   end
 
   def handle_cast({:command, :disconnect}, %{port: p } = state) do
-    Port.command(p, "disconnect")
+    Port.command(p, "disconnect\n")
     {:noreply, %{state | state: :attempt_disconnection}} 
   end
 
