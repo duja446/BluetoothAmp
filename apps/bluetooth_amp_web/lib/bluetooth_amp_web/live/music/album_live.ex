@@ -4,21 +4,10 @@ defmodule BluetoothAmpWeb.Music.AlbumLive do
   use BluetoothAmpWeb, :live_view
 
   def mount(%{"id" => id}, _, socket) do
-    album = Music.get_album_full!(id)
     {:ok, 
       socket
-      |> assign_album(album)
+      |> assign_new(:album, Music.get_album_full!())
     } 
-  end
-
-  def assign_album(socket, album) do
-    assign_new(socket, :album, fn -> album end)
-  end
-
-  def handle_event("play", %{"song_id" => id}, socket) do
-    song = Music.get_song_full!(id)
-    Player.Server.play_song(song)
-    {:noreply, socket}
   end
 
   def album_info(%{songs: songs, year_of_release: year_of_release}) do

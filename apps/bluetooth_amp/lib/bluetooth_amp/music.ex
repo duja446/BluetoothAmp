@@ -7,20 +7,18 @@ defmodule BluetoothAmp.Music do
   alias BluetoothAmp.Repo
 
   alias BluetoothAmp.Music.Artist
+  alias BluetoothAmp.Music.Album
   alias BluetoothAmp.Music.Song
+
+  # ARTIST
 
   def list_artists do
     Repo.all(Artist)
   end
 
-  def get_artist_by_name!(name) do
-    Repo.get_by!(Artist, name: name)
-  end
-
   def get_artist_with_albums!(id) do
     Repo.get(Artist, id) |> Repo.preload(:albums)
   end
-
 
   def create_artist(attrs \\ %{}) do
     %Artist{}
@@ -28,21 +26,8 @@ defmodule BluetoothAmp.Music do
     |> Repo.insert()
   end
 
-  def update_artist(%Artist{} = artist, attrs) do
-    artist
-    |> Artist.changeset(attrs)
-    |> Repo.update()
-  end
 
-  def delete_artist(%Artist{} = artist) do
-    Repo.delete(artist)
-  end
-
-  def change_artist(%Artist{} = artist, attrs \\ %{}) do
-    Artist.changeset(artist, attrs)
-  end
-
-  alias BluetoothAmp.Music.Album
+  # ALBUM
 
   def list_albums do
     Repo.all(Album)
@@ -64,20 +49,6 @@ defmodule BluetoothAmp.Music do
     |> Repo.insert()
   end
 
-  def update_album(%Album{} = album, attrs) do
-    album
-    |> Album.changeset(attrs)
-    |> Repo.update()
-  end
-
-  def delete_album(%Album{} = album) do
-    Repo.delete(album)
-  end
-
-  def change_album(%Album{} = album, attrs \\ %{}) do
-    Album.changeset(album, attrs)
-  end
-
   def get_number_of_songs(id) do
     query = from a in Album,
       where: a.id == ^id,
@@ -87,6 +58,8 @@ defmodule BluetoothAmp.Music do
     Repo.one!(query)
   end
 
+
+  # SONG
 
   def list_songs do
     Repo.all(Song)
@@ -132,33 +105,25 @@ defmodule BluetoothAmp.Music do
 
   def get_song_with_album!(id), do: Repo.get(Song, id) |> Repo.preload(:album)
 
-  def get_album_name(%Song{} = song) do
-    query = from s in Song,
-      join: a in Album, 
-      on:   a.id  == s.album_id,
-      select: a.name,
-      where: s.id == ^song.id
-    Repo.one!(query)
-  end
-
   def get_next_song!(%Song{track: track, album_id: album_id}) do
     number_of_songs = get_number_of_songs(album_id)
-    new_track_number = rem(track, number_of_songs) + 1
-    Song
-    |> where([song], song.album_id == ^album_id)
-    |> where([song], song.track == ^new_track_number)
-    |> full_song_query()
-    |> Repo.one!()
+    new_track_number = if track + 1 > number_of_songs, do: 1, else: track + 1
+    get_song_from_album_with_track_number(new_track_number, album_id)
   end
 
   def get_previous_song!(%Song{track: track, album_id: album_id}) do
     number_of_songs = get_number_of_songs(album_id)
-    new_track_number = rem(track, number_of_songs) - 1
+    new_track_number = if track == 1, do: number_of_songs, else: track - 1
+    get_song_from_album_with_track_number(new_track_number, album_id)
+  end
+
+  defp get_song_from_album_with_track_number(new_track_number, album_id) do
     Song
     |> where([song], song.album_id == ^album_id)
     |> where([song], song.track == ^new_track_number)
     |> full_song_query()
     |> Repo.one!()
+    
   end
 
   def like_song(id) do
@@ -172,23 +137,5 @@ defmodule BluetoothAmp.Music do
     |> Song.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:album, a)
     |> Repo.insert()
-  end
-
-  def create_temp_song(name) do
-    %Song{name: name, duration: 0}
-  end
-
-  def update_song(%Song{} = song, attrs) do
-    song
-    |> Song.changeset(attrs)
-    |> Repo.update()
-  end
-
-  def delete_song(%Song{} = song) do
-    Repo.delete(song)
-  end
-
-  def change_song(%Song{} = song, attrs \\ %{}) do
-    Song.changeset(song, attrs)
   end
 end

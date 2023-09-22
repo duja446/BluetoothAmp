@@ -22,7 +22,6 @@ defmodule BluetoothAmpWeb.MyComponents do
     </.link>
   </div>
 """
-
   end
 
   attr :id, :any, required: true

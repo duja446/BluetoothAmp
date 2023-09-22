@@ -74,26 +74,6 @@ defmodule BluetoothAmpWeb.Bluetooth.ConfigurationLive do
     {:noreply, assign(socket, :connected_to_mac, "")}
   end
 
-  def random_str(len) do
-    for _ <- 1..len, into: "", do: <<Enum.random('0123456789adbcdef')>>
-  end
-
-  def handle_event("add scanned device", _, socket) do
-    scanned_devices = 
-      Map.get(socket.assigns, :scanned_devices)
-      |> Map.put(random_str(4), random_str(10))
-    {:noreply, assign(socket, :scanned_devices, scanned_devices)} 
-  end
-
-  def handle_event("connect", _, socket) do
-    {:noreply, assign(socket, :connected_to_mac, "40:58:99:1A:D2:C5")}
-  end
-
-  def handle_event("fail", _, socket) do
-    send_message_to_self(:clear_error, @error_message_show_time_ms)
-    {:noreply, assign(socket, :error_msg, "Can't connect to test_MAC")}
-  end
-
   def send_message_to_self(message, delay_ms) do
     pid = self()
     Task.start(
